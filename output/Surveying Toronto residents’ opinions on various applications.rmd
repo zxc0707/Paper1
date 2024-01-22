@@ -1,7 +1,7 @@
 ---
 title: "Surveying Toronto residents’ opinions on various applications covered by the City by-law:City Clerk's Office needs to improve the polling mechanism and further explore possibilities"
 author: "Xincheng Zhang"
-thanks: "Code and data are available at https://github.com/zxc0707/Paper1.git"
+thanks: "Code and data are available at https://github.com/zxc0707/Surveying-Toronto-residents-opinions-on-various-applications.git"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 abstract: "As the number of residents continues to grow in Toronto, the poll is an effective method in the process of collecting and analyzing citizens' opinions on various project applications at the City Clerk's Office. This survey is mainly based on a data set from April 1, 2015, to January 20, 2024 (the last refresh), through discovering various variables such as application project name, total number of votes, etc. of Toronto citizens. Analyzing the enthusiasm, results, and hidden possibilities and giving relevant departments such as the City Clerk's Office several results and guiding suggestions for making polls in the future."
 output:
