@@ -32,6 +32,7 @@ toronto_polls <-
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Read a CSV file into an R data frame.
 filtered_data1 <- read_csv(
   file = "/cloud/project/input/data/cleaneddata_toronto_polls.csv",
   show_col_types = FALSE
