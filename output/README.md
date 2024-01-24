@@ -10,4 +10,4 @@ This repository contains a paper Surveying Toronto residents' opinions on variou
 
 -   Inputs folder contains a data folder with all raw data I used in the report, llms folder includes the entire chat history with Chat-GPT3.5 and a literature folder with all citing file.
 -   Outputs folder contains the paper in pdf file, R Markdown file of the paper, README file and references
--   Script folder contains the R files of simulating data,download data and cleaning data from open data Toronto and cleaned data for paper use.
+-   Script folder contains the R files of simulating data and test data for that simulating ,download data and cleaning data from open data Toronto and cleaned data for paper use.
