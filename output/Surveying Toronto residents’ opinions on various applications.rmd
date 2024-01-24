@@ -58,11 +58,11 @@ This statistical report examines Toronto citizens' attitudes toward 11 hot-spot 
 
 ## About Polls conducted by the City
 
-To investigate Toronto residents' attitudes toward 11 different application programs, I obtained the "About Polls conducted by the City" data set from the open data Toronto website. This data set is a table type provided by the City Clerk's Office and updated daily, including citizens' attitudes of 11 focus application types from April 1, 2015, to January 20, 2024 (the last refresh). The database reflects Toronto citizens' support for various projects through three types of vote content: support, opposition, and neutral attitude (No mark to identify in "favor" or "opposed"). In addition, in addition to the three variables of ballot content, there is also an indeterminate ballot marked as "SPOILED", which refers to ballots received that were not clearly marked as either "in favor" or "opposed". In order to avoid errors of judgment in the final decision made by The City Clerk's Office. I will also use 2 constructed variables "DURATION" and "DIFFERENCES" in the data set to perform further analysis on some items that have the potential to be reversed.
+To investigate Toronto residents' attitudes toward 11 different application programs, I obtained the "About Polls conducted by the City" data set from the open data Toronto website. This data set is a table type provided by the City Clerk's Office and updated daily, including citizens' attitudes of 11 focus application types from April 1, 2015, to January 20, 2024 (the last refresh). The database reflects Toronto citizens' support for various projects through three types of vote content: support, opposition, and neutral attitude (No mark to identify in "favor" or "opposed"). In addition, in terms of the three variables of ballot content, there is also an indeterminate ballot marked as "SPOILED", which refers to ballots received that were not clearly marked as either "in favor" or "opposed". In order to avoid errors of judgment in the final decision made by The City Clerk's Office. I will also use 2 constructed variables "DURATION" and "DIFFERENCES" in the data set to perform further analysis on some items that have the potential to be reversed.
 
 The data set contains 1,235 citizen surveys (rows) and 25 different variables (columns) about specific application projects. Each line represents a poll and contains various information, such as application type name, application address, total number of votes, etc.
 
-```{r dataextract, echo=FALSE, message=FALSE}
+```{r table1, echo=FALSE, message=FALSE}
 # Set up libraries
 library(knitr)
 library(kableExtra)
@@ -73,17 +73,19 @@ filtered_data2 <- filtered_data1 %>%
 filtered_data2 %>%
   slice(1:10) %>%
   kable(
-    caption = "Selecting first 10 rows of part of required columns from the residents'opinions dataset",
+    caption = "Selecting first 10 rows of part of required columns from the residents'opinions dataset(sample)",
 col.names=c("BALLOTS_SPOILED", "BALLOTS_DISTRIBUTED", "OPEN_DATE", "CLOSE_DATE"),
 linesep = "", digits = 1, booktabs=TRUE) %>%
   kable_styling(latex_options = "HOLD_position", font_size = 10)
 ```
 
-Table 1 shows the first 10 rows of the resident opinion data set. It should be noted that I used more than these 4 columns in this report. The data information represented by each column is explained in detail below by listing them one by one.
+Table 1 \@ref(tab:table1) shows the first 10 rows of the resident opinion data set. It should be noted that I used more than these 4 columns in this report. The data information represented by each column is explained in detail below by listing them one by one.
 
 This statistical report focuses on 11 of these 25 variables: vote start time, vote end time, vote type name, number of votes in favor, number of votes in oppose, number of neutral votes, number of uncertain votes, total number of votes distributed, differences between support and oppose, final voting list of the total number of voters, election duration.For time variables, it is time format data. For text variables, it is data in text form. For quantitative variables, measurement is in the form of a numeric variable.
 
 By using R [@citeR], and R packages "tidyverse" [@citetidyverse], "dplyr" [@citedplyr], "janitor" [@citejanitor], "lubridate" [@citelubridate] and "knitr" [@citeknitr].
+
+On the open data Toronto website, I did not find any other data set similar to "About Polls conducted by the City". For other data sets, I think that the data feature does not clearly indicate the data I am interested in, and many of them have missing data. This is why I chose the "About Polls conducted by the City" data set.
 
 The variable "BALLOTS_SPOILED" represents the Number of ballots received and were not clearly marked as either "in favor" or "opposed".The variable "BALLOTS_DISTRIBUTED" represents the Number of ballots distributed.The variable "BALLOTS_IN_FAVOUR" represents the Number of ballots received and marked "in favor''.The variable"BALLOTS_OPPOSED" represents the Number of ballots received and marked "opposed".The variable "BALLOTS_BLANK" represents the Number of ballots received with no mark to identify in "favor" or "opposed".The variable "BALLOTS_SPOILED" represents the Number of ballots received and were not clearly marked as either "in favor" or "opposed".The variable "OPEN_DATE" represents the Date the poll is open to public.The variable " CLOSE_DATE" represents the Date the poll has been closed.The variable "APPLICATION_FOR" represents the Type of application.The variable "DURATION" represents the duration of this poll and the variable "DIFFERENCES" represents the differences in support and opposition of this poll.
 
@@ -91,7 +93,7 @@ There is also a variable in the original database called BALLOTS_RECEIVED_BY_VOT
 
 The poll is an important method in Toronto to collect citizens' thoughts on different types of application projects. I want to study citizens' sensitivity to voting duration by creating a scatter plot first. In other words, the relationship between duration and participation. It effectively gave the City Clerk's Office a persuasive suggestion to adjust the length of future polls.
 
-Figure 1 is composed of the voting duration on the x-axis and the number of total voters on the final poll list on the y-axis. This chart mainly shows the sensitivity of Toronto citizens in making judgments about the length of time to submit their ballots. To be more specific, from the available data, a 30-day voting duration is the most encouraging for citizens to actively participate in voting. As for the comparison of length of time, it can be seen that when the voting duration is less than 30 days, there is less participation than when the voting duration is 60 days. This means that for The City Clerk's Office in Toronto, a 30-day voting period can ensure the highest level of citizen participation. The second is 60 days, and the worst effect is within 30 days for the citizen in Toronto.
+Figure 1  is composed of the voting duration on the x-axis and the number of total voters on the final poll list on the y-axis. This chart mainly shows the sensitivity of Toronto citizens in making judgments about the length of time to submit their ballots. To be more specific, from the available data, a 30-day voting duration is the most encouraging for citizens to actively participate in voting. As for the comparison of length of time, it can be seen that when the voting duration is less than 30 days, there is less participation than when the voting duration is 60 days. This means that for The City Clerk's Office in Toronto, a 30-day voting period can ensure the highest level of citizen participation. The second is 60 days, and the worst effect is within 30 days for the citizen in Toronto.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.cap="The impact of voting duration on citizen participation starts from April 1, 2015", fig.width=8.4, fig.height=3.6}
 #Creates a scatter plot with points representing the relationship between the "DURATION" and "FINAL_VOTER_COUNT" variables in the filtered_data1 data frame. 
@@ -102,7 +104,7 @@ ggplot(filtered_data1, aes(x = DURATION, y = FINAL_VOTER_COUNT)) +
        y = "Final number of poll")
 ```
 
-Figure 2 shows the voting results of Toronto citizens for different application types. There are three types of voting results: support, opposition, and neutral (no mark to identify in "favor" or "opposed"), which correspond to three different colors in the histogram: green, blue, and red. In the x-axis, there are 11 different application types: Appeal-Front Yard Parking/Front Yard Parking/Permit Parking/Traffic Calming/Commercial Boulevard Parking/Boulevard Cafe/Permit Parking Removal/Proposed Business Improvement Area/Traffic Calming island/Traffic Calming Safety zone/Business Improvement Area.
+Figure 2  shows the voting results of Toronto citizens for different application types. There are three types of voting results: support, opposition, and neutral (no mark to identify in "favor" or "opposed"), which correspond to three different colors in the histogram: green, blue, and red. In the x-axis, there are 11 different application types: Appeal-Front Yard Parking/Front Yard Parking/Permit Parking/Traffic Calming/Commercial Boulevard Parking/Boulevard Cafe/Permit Parking Removal/Proposed Business Improvement Area/Traffic Calming island/Traffic Calming Safety zone/Business Improvement Area.
 
 By observing the histogram, It can be clearly observed that for the Front Yard Parking application project, citizens showed very different voting results. The number of votes supporting this application project was nearly 6 times that of those opposing it. This voting results not only reflect citizens' demand for front yard parking but also reflect citizens' enthusiasm for such topics. This can also be concluded through the statistical results of the Appeal-Front Yard Parking project. For the Commercial Boulevard Parking and Proposed Business Improvement Area, citizens did not respond with strong feedback.
 
@@ -111,34 +113,38 @@ By observing the histogram, It can be clearly observed that for the Front Yard P
 library(ggplot2)
 library(tidyr)
 #Creates a histogram that representing the relationship between the numbers of  "BALLOTS_BLANK","BALLOTS_IN_FAVOUR","BALLOTS_OPPOSED" and "APPLICATION_FOR"variables in the filtered_data1 data frame.
+library(ggplot2)
+library(tidyr)
+
 summed_data <- filtered_data1 %>%
- group_by(APPLICATION_FOR) %>%
- summarise(
-   BALLOTS_BLANK = sum(BALLOTS_BLANK),
-   BALLOTS_IN_FAVOUR = sum(BALLOTS_IN_FAVOUR),
-   BALLOTS_OPPOSED = sum(BALLOTS_OPPOSED)
- )
+  group_by(APPLICATION_FOR) %>%
+  summarise(
+    BALLOTS_BLANK = sum(BALLOTS_BLANK),
+    BALLOTS_IN_FAVOUR = sum(BALLOTS_IN_FAVOUR),
+    BALLOTS_OPPOSED = sum(BALLOTS_OPPOSED)
+  )
 
 melted_data <- pivot_longer(
- summed_data,
- cols = starts_with("BALLOTS_"),
- names_to = "variable",
- values_to = "value"
+  summed_data,
+  cols = starts_with("BALLOTS_"),
+  names_to = "variable",
+  values_to = "value"
 )
 
 ggplot(melted_data, aes(x = APPLICATION_FOR, y = value, fill = variable)) +
- geom_bar(stat = "identity", position = "dodge") +
- labs(title = "Bar Plot of Number of Polls by Application",
-      x = "Application",
-      y = "Number of Polls",
-      fill = "Ballot Type") +
- theme(
-   axis.text.x = element_text(angle = 45, hjust = 1, size = 12),  
-   axis.text.y = element_text(size = 20),
-   axis.title = element_text(size = 24),  
-   plot.title = element_text(size = 38),
-   legend.text = element_text(size = 16)
- )
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Bar Plot of Number of Polls by Application",
+       x = "Application",
+       y = "Number of Polls",
+       fill = "Ballot Type") +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),  
+    axis.text.y = element_text(size = 20),
+    axis.title = element_text(size = 24),  
+    plot.title = element_text(size = 38),
+    legend.text = element_text(size = 16)
+  ) +
+  scale_fill_manual(values = c("BALLOTS_IN_FAVOUR" = "green", "BALLOTS_OPPOSED" = "red","BALLOTS_BLANK"= "blue"))
 ```
 
 In addition to clearly marked ballots, The City Clerk's Office also received many samples of unmarked ballots. I think this also influences the overall research topic and deserves to be discussed.
@@ -199,7 +205,7 @@ However, since there is no summary of the above-mentioned possibilities in the o
 
 # Discussion
 
-Based on the whole report, several conclusions can be drawn from the analysis of the data set that extracted 9 variables from the original database of open data Toronto and added two new variables by using code.
+Based on the whole report, several conclusions can be drawn from the analysis of the data set that extracted 9 variables from the original database of open data Toronto and created another 2 using original data.
 
 Firstly, the duration of the poll has a certain impact on citizen participation in Toronto. The relation can be concluded from the scatter plot in Figure 1, which implies the City Clerk's Office needs to try to control future polls to 30 days to attract more residents to participate in voting or to effectively increase citizen participation in the poll.
 

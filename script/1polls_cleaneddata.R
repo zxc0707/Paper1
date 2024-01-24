@@ -1,8 +1,3 @@
-install.packages("opendatatoronto")
-install.packages("janitor")
-install.packages("knitr")
-install.packages("lubridate")
-install.packages("tidyverse")
 #loads several R packages
 library("janitor")
 library("knitr")
@@ -40,7 +35,6 @@ head(filtered_data1)
 
 
 #output a csv file in R
-
 write_csv(
   x = filtered_data1,
   file = "/cloud/project/input/data/cleaneddata_toronto_polls.csv"
