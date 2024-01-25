@@ -3,7 +3,7 @@ title: "Surveying Toronto residents’ opinions on various applications covered 
 author: "Xincheng Zhang"
 thanks: "Code and data are available at https://github.com/zxc0707/Surveying-Toronto-residents-opinions-on-various-applications.git"
 date: "`r format(Sys.time(), '%d %B %Y')`"
-abstract: "As the number of residents continues to grow in Toronto, the poll is an effective method in the process of collecting and analyzing citizens' opinions on various project applications at the City Clerk's Office. This survey is mainly based on a data set from April 1, 2015, to January 20, 2024 (the last refresh), through discovering various variables such as application project name, total number of votes, etc. of Toronto citizens. Analyzing the enthusiasm, results, and hidden possibilities and giving relevant departments such as the City Clerk's Office several results and guiding suggestions for making polls in the future."
+abstract: "As the number of residents continues to grow in Toronto, the poll is an effective method in the process of collecting citizens' opinions on various project applications at the City Clerk's Office. This survey is mainly based on a data set from April 1, 2015, to January 20, 2024 (the last refresh), through discovering various variables such as application names, and total number of votes of Toronto citizens to analyse the enthusiasm, results, and hidden possibilities. To give relevant departments such as the City Clerk's Office several reasonable suggestions to set the future poll duration to one month and increase the number of votes to improve the ability to judge the results of certain types of applications."
 output:
    bookdown::pdf_document2
 toc: true
@@ -39,7 +39,6 @@ filtered_data1 <- read_csv(
 )
 ```
 
-
 \newpage
 
 # Introduction
@@ -60,6 +59,8 @@ This statistical report examines Toronto citizens' attitudes toward 11 hot-spot 
 
 To investigate Toronto residents' attitudes toward 11 different application programs, I obtained the "About Polls conducted by the City" data set from the open data Toronto website. This data set is a table type provided by the City Clerk's Office and updated daily, including citizens' attitudes of 11 focus application types from April 1, 2015, to January 20, 2024 (the last refresh). The database reflects Toronto citizens' support for various projects through three types of vote content: support, opposition, and neutral attitude (No mark to identify in "favor" or "opposed"). In addition, in terms of the three variables of ballot content, there is also an indeterminate ballot marked as "SPOILED", which refers to ballots received that were not clearly marked as either "in favor" or "opposed". In order to avoid errors of judgment in the final decision made by The City Clerk's Office. I will also use 2 constructed variables "DURATION" and "DIFFERENCES" in the data set to perform further analysis on some items that have the potential to be reversed.
 
+In this report, all data used or processed were accessed and downloaded from the original data set of open data Toronto through R.
+
 The data set contains 1,235 citizen surveys (rows) and 25 different variables (columns) about specific application projects. Each line represents a poll and contains various information, such as application type name, application address, total number of votes, etc.
 
 ```{r table1, echo=FALSE, message=FALSE}
@@ -67,7 +68,7 @@ The data set contains 1,235 citizen surveys (rows) and 25 different variables (c
 library(knitr)
 library(kableExtra)
 
-# Create a table with some selected columns
+# Create a table1 with some selected columns
 filtered_data2 <- filtered_data1 %>%
   select(BALLOTS_SPOILED, BALLOTS_DISTRIBUTED, OPEN_DATE, CLOSE_DATE)
 filtered_data2 %>%
@@ -79,7 +80,7 @@ linesep = "", digits = 1, booktabs=TRUE) %>%
   kable_styling(latex_options = "HOLD_position", font_size = 10)
 ```
 
-Table 1 \@ref(tab:table1) shows the first 10 rows of the resident opinion data set. It should be noted that I used more than these 4 columns in this report. The data information represented by each column is explained in detail below by listing them one by one.
+Table 1 (\@ref(tab:table1)) shows the first 10 rows of the resident opinion data set. It should be noted that I used more than these 4 columns in this report. The data information represented by each column is explained in detail below by listing them in a table.
 
 This statistical report focuses on 11 of these 25 variables: vote start time, vote end time, vote type name, number of votes in favor, number of votes in oppose, number of neutral votes, number of uncertain votes, total number of votes distributed, differences between support and oppose, final voting list of the total number of voters, election duration.For time variables, it is time format data. For text variables, it is data in text form. For quantitative variables, measurement is in the form of a numeric variable.
 
@@ -87,28 +88,49 @@ By using R [@citeR], and R packages "tidyverse" [@citetidyverse], "dplyr" [@cite
 
 On the open data Toronto website, I did not find any other data set similar to "About Polls conducted by the City". For other data sets, I think that the data feature does not clearly indicate the data I am interested in, and many of them have missing data. This is why I chose the "About Polls conducted by the City" data set.
 
-The variable "BALLOTS_SPOILED" represents the Number of ballots received and were not clearly marked as either "in favor" or "opposed".The variable "BALLOTS_DISTRIBUTED" represents the Number of ballots distributed.The variable "BALLOTS_IN_FAVOUR" represents the Number of ballots received and marked "in favor''.The variable"BALLOTS_OPPOSED" represents the Number of ballots received and marked "opposed".The variable "BALLOTS_BLANK" represents the Number of ballots received with no mark to identify in "favor" or "opposed".The variable "BALLOTS_SPOILED" represents the Number of ballots received and were not clearly marked as either "in favor" or "opposed".The variable "OPEN_DATE" represents the Date the poll is open to public.The variable " CLOSE_DATE" represents the Date the poll has been closed.The variable "APPLICATION_FOR" represents the Type of application.The variable "DURATION" represents the duration of this poll and the variable "DIFFERENCES" represents the differences in support and opposition of this poll.
+```{r table2, echo=FALSE, message=FALSE}
+# Creating the table2 to display all variables' meanings
+variables <- c("BALLOTS_SPOILED", "BALLOTS_DISTRIBUTED", "BALLOTS_IN_FAVOUR", "BALLOTS_OPPOSED", "BALLOTS_BLANK", "BALLOTS_SPOILED", "OPEN_DATE", "CLOSE_DATE", "APPLICATION_FOR", "DURATION", "DIFFERENCES")
+meanings <- c("Ballots received and were not clearly marked as either 'in favor' or 'opposed'.",
+              "The Number of ballots distributed.",
+              "The Number of ballots received and marked 'in favor'.",
+              "The Number of ballots received and marked 'opposed'.",
+              "Ballots received with no mark to identify in 'favor' or 'opposed'.",
+              "Ballots received and were not clearly marked as either 'in favor' or 'opposed'.",
+              "The Date the poll is open to the public.",
+              "The Date the poll has been closed.",
+              "The Type of application.",
+              "The duration of this poll.",
+              "The differences in support and opposition of this poll.")
+
+# Combining the variables column and meanings column into one data frame
+table_data <- data.frame(Variables = variables, Meanings = meanings)
+
+# Printing the table and setting the caption and text size 
+kableExtra::kable_styling(knitr::kable(table_data, caption = "Names and corresponding meanings of the 11 variables used in this report"), font_size = 9)
+
+```
+
+Table 2 (\@ref(tab:table2))shows the names and corresponding meanings of the 11 variables used in this report.
 
 There is also a variable in the original database called BALLOTS_RECEIVED_BY_VOTERS, which represents the Number of ballots returned to City Clerk's Office. The reason why this variable does not replace BALLOTS_DISTRIBUTED (Number of ballots distributed) is because when the ballots are sent out and filled out by citizens, some errors such as lost or omitted ballots that are returned to the City Clerk's Office should not be allowed to lose the total statistics. This is unfair to citizens and will affect the final judgment.
 
 The poll is an important method in Toronto to collect citizens' thoughts on different types of application projects. I want to study citizens' sensitivity to voting duration by creating a scatter plot first. In other words, the relationship between duration and participation. It effectively gave the City Clerk's Office a persuasive suggestion to adjust the length of future polls.
 
-Figure 1  is composed of the voting duration on the x-axis and the number of total voters on the final poll list on the y-axis. This chart mainly shows the sensitivity of Toronto citizens in making judgments about the length of time to submit their ballots. To be more specific, from the available data, a 30-day voting duration is the most encouraging for citizens to actively participate in voting. As for the comparison of length of time, it can be seen that when the voting duration is less than 30 days, there is less participation than when the voting duration is 60 days. This means that for The City Clerk's Office in Toronto, a 30-day voting period can ensure the highest level of citizen participation. The second is 60 days, and the worst effect is within 30 days for the citizen in Toronto.
+Figure 1 is composed of the voting duration on the x-axis and the number of total voters on the final poll list on the y-axis. This chart mainly shows the sensitivity of Toronto citizens in making judgments about the length of time to submit their ballots. To be more specific, the distribution of blue points in the figure represents the number of poll participants under different poll durations. Each point in the data represents a poll event (row). The x-axis corresponding to each point represents the duration of this poll. Correspondingly, the y-axis corresponding to each point represents the overall number of participants in this poll. For example, looking at Figure 1, when the duration of the poll is set to 60 days, the highest number of participants in a poll is 1,000 people, which corresponds to the highest blue point when the x-axis is 60.
+
+From the available data, a 30-day voting duration is the most encouraging for citizens to actively participate in voting since the highest point equals to about 2450 when the x-axis is 30, which is clearly higher than others. As for the comparison of length of time, it can be seen that when the voting duration is less than 30 days, there is less participation than when the voting duration is 60 days. This means that for The City Clerk's Office in Toronto, a 30-day voting period can ensure the highest level of citizen participation. The second is 60 days, and the worst effect is within 30 days for the citizen in Toronto.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.cap="The impact of voting duration on citizen participation starts from April 1, 2015", fig.width=8.4, fig.height=3.6}
 #Creates a scatter plot with points representing the relationship between the "DURATION" and "FINAL_VOTER_COUNT" variables in the filtered_data1 data frame. 
 ggplot(filtered_data1, aes(x = DURATION, y = FINAL_VOTER_COUNT)) +
   geom_point(alpha = 1.5, color = "blue") +
   labs(title = "Scatter Plot of Duration vs Final voter amount",
-       x = "Duration",
+       x = "Duration(days)",
        y = "Final number of poll")
 ```
 
-Figure 2  shows the voting results of Toronto citizens for different application types. There are three types of voting results: support, opposition, and neutral (no mark to identify in "favor" or "opposed"), which correspond to three different colors in the histogram: green, blue, and red. In the x-axis, there are 11 different application types: Appeal-Front Yard Parking/Front Yard Parking/Permit Parking/Traffic Calming/Commercial Boulevard Parking/Boulevard Cafe/Permit Parking Removal/Proposed Business Improvement Area/Traffic Calming island/Traffic Calming Safety zone/Business Improvement Area.
-
-By observing the histogram, It can be clearly observed that for the Front Yard Parking application project, citizens showed very different voting results. The number of votes supporting this application project was nearly 6 times that of those opposing it. This voting results not only reflect citizens' demand for front yard parking but also reflect citizens' enthusiasm for such topics. This can also be concluded through the statistical results of the Appeal-Front Yard Parking project. For the Commercial Boulevard Parking and Proposed Business Improvement Area, citizens did not respond with strong feedback.
-
-```{r echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Levels of citizen support/opposition/neutrality for different types of applications", fig.width=15, fig.height=10}
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Levels of citizen support/opposition/neutrality for different types of applications", fig.width=15, fig.height=15}
 # load the ggplot2 and tidyr packages in R.
 library(ggplot2)
 library(tidyr)
@@ -138,14 +160,18 @@ ggplot(melted_data, aes(x = APPLICATION_FOR, y = value, fill = variable)) +
        y = "Number of Polls",
        fill = "Ballot Type") +
   theme(
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 12),  
+    axis.text.x = element_text(angle = 60, hjust = 1, size = 22),  
     axis.text.y = element_text(size = 20),
     axis.title = element_text(size = 24),  
     plot.title = element_text(size = 38),
-    legend.text = element_text(size = 16)
+    legend.text = element_text(size = 20)
   ) +
   scale_fill_manual(values = c("BALLOTS_IN_FAVOUR" = "green", "BALLOTS_OPPOSED" = "red","BALLOTS_BLANK"= "blue"))
 ```
+
+Figure 2 shows the voting results of Toronto citizens for different application types. There are three types of voting results: support, opposition, and neutral (no mark to identify in "favor" or "opposed"), which correspond to three different colors in the histogram: green, blue, and red. In the x-axis, there are 11 different application types: Appeal-Front Yard Parking/Front Yard Parking/Permit Parking/Traffic Calming/Commercial Boulevard Parking/Boulevard Cafe/Permit Parking Removal/Proposed Business Improvement Area/Traffic Calming island/Traffic Calming Safety zone/Business Improvement Area.
+
+By observing the histogram, It can be clearly observed that for the Front Yard Parking application project, citizens showed very different voting results. The number of votes supporting this application project was nearly 6 times that of those opposing it. This voting results not only reflect citizens' demand for front yard parking but also reflect citizens' enthusiasm for such topics. This can also be concluded through the statistical results of the Appeal-Front Yard Parking project. For the Commercial Boulevard Parking and Proposed Business Improvement Area, citizens did not respond with strong feedback.
 
 In addition to clearly marked ballots, The City Clerk's Office also received many samples of unmarked ballots. I think this also influences the overall research topic and deserves to be discussed.
 
@@ -175,29 +201,33 @@ ggplot(melted_data, aes(x = APPLICATION_FOR, y = value, fill = variable)) +
        x = "Application",
        y = "Number of Polls",
        fill = "Ballot Type") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1,size = 7))  
+  theme(axis.text.x = element_text(angle = 60, hjust = 1,size = 9))  
 ```
 
 We can clearly observe that as the total number of released votes increases, the number of uncertain votes increases. What I'm interested in is whether these uncertain votes counted in the whole 11 areas have the possibility of reversing the final research results. Therefore, based on the results in Figure 2, I concluded that among these 11 areas, only 3 areas do not have this possibility: Appeal-Front yard parking/Front yard parking/Traffic calming. Because for these three areas, their results are very different, there is not a relatively large difference in the number of people supporting and opposing in other areas, which means that when these uncertain votes are determined. The final decision will be changed which requires further analysis.
 
-Figure 4 is to compare the difference between support votes and opposition votes (pink) and the number of uncertain votes (grey). Through the chart, we found that the two areas of Commercial Boulevard Parking and Boulevard Cafe are evenly distributed. This shows that when the results of uncertain votes are confirmed through some methods, the conclusions of data research on these two areas will be overturned.
+Figure 4 is to compare the difference between support votes and opposition votes (pink) and the number of uncertain votes (grey). In this bar graph, the pink area represents the difference between support and opposition for each application type. In other words, pink represents the number of additional negative votes needed to reverse the final decision.
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Differences in support and opposition compared with uncertain votes", fig.width=7, fig.height=3.2}
-#load the ggplot2 package in R.
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Differences in support and opposition compared with uncertain votes", fig.width=7, fig.height=7}
+##load the ggplot2 package in R.
 library(ggplot2)
-#Creates a histogram that representing the relationship between the numbers of  "BALLOTS_SPOILED","DIFFERENCES" and "APPLICATION_FOR"variables in the filtered_data1 data frame.
-difference_color <- "#FFC0CB"  
-spoiled_color <- "#808080"
+# Creating the bar plot
+filtered_data1$DIFFERENCES <- abs(filtered_data1$DIFFERENCES)
 ggplot(filtered_data1, aes(x = APPLICATION_FOR)) +
   geom_bar(aes(y = DIFFERENCES, fill = "Differences"), stat = "identity", position = "dodge", color = "black") +
   geom_bar(aes(y = BALLOTS_SPOILED, fill = "Spoiled Ballots"), stat = "identity", position = "dodge", color = "black") +
-  scale_fill_manual(values = c("Differences" = difference_color, "Spoiled Ballots" = spoiled_color)) +
-  labs(title = "Bar Plot of Differences and Spoiled Ballots by Application",
-       x = "Application",
-       y = "Count",
+  labs(title = "Bar Plot of Number of Polls by Application",
+       x = "Applications",
+       y = "Number of Polls",
        fill = "Category") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1,size = 5))
+  theme(axis.text.x = element_text(angle = 60, hjust = 1,size = 9),
+        legend.position = "top") +
+  scale_fill_manual(values = c("Differences" = "#FFC0CB", "Spoiled Ballots" = "#808080"))
+
+
 ```
+
+The gray area represents the number of uncertain votes for each application type. Through the chart, we found that the two areas of Permit Parking and Boulevard Cafe are evenly distributed among the two color areas. This shows that when the results of uncertain votes are confirmed through some methods, the conclusions of data research on these two areas will be overturned.
 
 In addition, the reason why uncertain ballots are marked as "SPOILED" should definitely be considered within the scope of consideration. Specifically, the reason why the ballot is not confirmed is because the handwriting is confusing, unreadable, or the ballot is damaged. This situation will further determine the control of the variable of uncertain votes on the overall results.
 
@@ -213,7 +243,7 @@ Secondly, from Figure 2 we can clearly observe that citizens' opinions on the tw
 
 Thirdly, Figure 3 shows us the total number of votes distributed by the City Clerk's Office for each project. Since the two items mentioned above do not require continuous public opinion adoption in the future, the excess votes can be averaged or allocated to the other 9 items based on adjustment preferences. As the total number of allocated votes increases, the overall voting results of the people will be more obvious. After this, the same analytic approach can be used to identify those projects that citizens clearly support and are considering for implementation. On the contrary, the applications are opposed by citizens and replaced with new proposals.
 
-Lastly, due to the existence of votes marked as "SPOILED", by observing Figure 4, we can see that there are risks in judging the two projects of Commercial Boulevard Parking and Boulevard Cafe if only based on existing data. This means that if the majority of the uncertain votes are determined to be objectionable through some method (for example, re-election, home visits to ask for opinions, etc.), the City Clerk's Office will make errors in the judgment of these two results and cause dissatisfaction among citizens. My suggestion is to distribute more votes to these two items in subsequent poll settings and increase the overall number of votes so that citizens' opinions become obvious trends or differences for subsequent processing of applications.
+Lastly, due to the existence of votes marked as "SPOILED", by observing Figure 4, we can see that there are risks in judging the two projects of Permit Parking and Boulevard Cafe if only based on existing data. This means that if the majority of the uncertain votes are determined to be objectionable through some method (for example, re-election, home visits to ask for opinions, etc.), the City Clerk's Office will make errors in the judgment of these two results and cause dissatisfaction among citizens. My suggestion is to distribute more votes to these two items in subsequent poll settings and increase the overall number of votes so that citizens' opinions become obvious trends or differences for subsequent processing of applications.
 
 In addition, there appear to be different views on the effectiveness of this type of polling in civic activities depending on the voting items. For example, for presidential election, the error range of poll election is mostly maintained within 6%. On the contrary, polls about social and economic issues did not show such a high accuracy rate.[@field1942testing] The prospect of polling as a citizen activity is also a huge challenge for the City Clerk's Office, because limited resources and incompatible rewards will lead to citizens not paying enough attention to the activity of polling and lacking enthusiasm, as mentioned in the article.[@parry2008state]
 
